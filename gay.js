@@ -65,7 +65,7 @@ function drawCircles(selected_countries){
   console.log("hello");
 
  
-  var svg = d3.select("#viz");
+  var svg = d3.select("#viz_1");
  
   var originX = 100;
 var originY = 200;
