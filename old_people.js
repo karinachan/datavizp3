@@ -2,7 +2,7 @@
 // Must use server: python -m SimpleHTTPServer 8080
 
 var GLOBAL = { data: [],
-                // colors: ["#00CCFF", "#0099CC", "#006699", "#003366", "#5C1437", "#7D0E37", "#2D082A"],
+               
                 // colors: ["#16C2FB", "#03C0FF", "#0099CC", "#007095", "#005875", "#00445A", "#002B3A"],
                 colors: ["#3DCFFF", "#06C1FF", "#0099CC", "#006587", "#01394B", "#00171F", "#000000"],
                 america_countries: ["United States", "Brazil", "Argentina"],
@@ -33,6 +33,8 @@ function initialize_viz2()
   getData(function(data)
   {
     GLOBAL.data = data;
+
+
   });
 }
 
