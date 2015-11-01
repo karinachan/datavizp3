@@ -1,6 +1,4 @@
-/*
 
-*/
 
 <!DOCTYPE html>
 <html>
@@ -84,27 +82,28 @@ function run () {
     initializeView();
     setupOverview();
     // get data, call f when done
-    getDataRows(function(data) {
-  GLOBAL.data = data;
+    getDataRows(function(data)
+  {
+    console.log("question");
+    GLOBAL.data = data;
+    var question = "Q27";
+    var selected_countries = ["United States"]
+
+    //percentages = run_calculations(question, selected_countries);
+    //console.log(percentages);
 
   console.log(GLOBAL.data);
-  updateOverview() });
+  });
 }
-
 
 // global variables 
 
 var GLOBAL = { data: [],
-         media: ["Facebook",
-           "Pinterest",
-           "Instagram",
-           "LinkedIn",
-           "Twitter"],
-         segments: ["Gender",
-        "Age",
-        "Race"]
-       }
-
+                countries: ["UNITED STATES"],
+                questions: [
+                  {number: "Q27", answers: ["Number 1 – Homosexuality should be accepted by society", "Number 2 – Homosexuality should not be accepted by society", "Not a problem", "Don't know", "Refused"]},
+                  {number: "Q129", answers: ["Morally unacceptable", "Not a moral issue", "Refused", "Don't know"]}
+                ]}
 
 // split data into groups based on 'col' values
 // (only process rows satisfying 'pred')
@@ -166,7 +165,8 @@ function setupOverview () {
 
     var svg = d3.select("#viz");
     var s = computeSizes(svg);
-    var barWidth = s.chartWidth/(2*GLOBAL.media.length-1);
+    console.log(GLOBAL.data);
+    var barWidth = s.chartWidth/(2*GLOBAL.countries.length-1);
 
     // get rid of old view
     svg.selectAll("g").remove();

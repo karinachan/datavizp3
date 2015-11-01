@@ -14,7 +14,7 @@ function run_viz2()
     console.log("question");
     GLOBAL.data = data;
     var question = "Q128";
-    var selected_countries = ["United States", "Argentina"]
+   // var selected_countries = ["United States", "Argentina"]
 
     percentages = run_calculations(question, selected_countries);
     console.log(percentages);

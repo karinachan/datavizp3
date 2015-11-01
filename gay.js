@@ -1,46 +1,136 @@
+var GLOBAL = { data: [],
+                countries:["United States", "Japan", "Germany","Britain","South Korea"],
+                questions: [
+                  {number: "Q27", answers: ["Number 1", "Number 2", "Not a problem", "Don't know", "Refused"]},
+                  {number: "Q129", answers: ["Morally unacceptable", "Not a moral issue", "Refused", "Don't know"]}
+                ]}
+    var count = new Array(); // create an empty array
 
-(function() {
+    var total_count = 0;
 
-  // Fake JSON data
-  var json = {"countries_msg_vol": {
-    "CA": 170, "US": 393, "BB": 12, "CU": 9, "BR": 89, "MX": 192, "PY": 32, "UY": 9, "VE": 25, "BG": 42, "CZ": 12, "HU": 7, "RU": 184, "FI": 42, "GB": 162, "IT": 87, "ES": 65, "FR": 42, "DE": 102, "NL": 12, "CN": 92, "JP": 65, "KR": 87, "TW": 9, "IN": 98, "SG": 32, "ID": 4, "MY": 7, "VN": 8, "AU": 129, "NZ": 65, "GU": 11, "EG": 18, "LY": 4, "ZA": 76, "A1": 2, "Other": 254 
-  }};
+function run_viz1()
+{
+  console.log("run");
+ var question = "Q27";
+  var dat= getDataRows(function(data)
+  {
+    
+    GLOBAL.data = data;
+   
+       //for every country, count up the things
+  updateOverview(question);
+  drawCircles(GLOBAL.countries);
+  });
   
-    // D3 Bubble Chart 
 
-    var diameter = 600;
+}
 
-    var svg = d3.select('#viz')
 
-    var bubble = d3.layout.pack()
-                .size([diameter, diameter])
-                .value(function(d) {return d.size;})
-         // .sort(function(a, b) {
-                //  return -(a.value - b.value)
-                // }) 
-                .padding(3);
-  
-  // generate data with calculated layout values
-  var nodes = bubble.nodes(processData(json))
-                        .filter(function(d) { return !d.children; }); // filter out the outer bubble
+
+
+function updateOverview(question){
+
+  GLOBAL.data.forEach(function(r) {  //for each row
+  total_count += 1;
+  GLOBAL.countries.forEach(function() { //for each country in data
+  answer = r[question];
+  country = r["COUNTRY"];
+             
+
+    if ("Number 1 – Homosexuality should be accepted by society".indexOf(answer) && (GLOBAL.countries.indexOf(country) !== -1)) { 
+
+  if (country in count){ //if doesn't exist
+   // console.log(count[r["COUNTRY"]]);
+        num = count[country]+1; //increment value
+        //console.log(num); 
+         count[country]= num; //put back in
+       
+     } else {
+      count[country]=1; //initialize as 1
+      
+     }
  
-  var vis = svg.selectAll('circle')
-                    .data(nodes);
-  
-  vis.enter().append('circle')
-            .attr('transform', function(d) { return 'translate(' + d.x + ',' + d.y + ')'; })
-            .attr('r', function(d) { return d.r; })
-            .attr('class', function(d) { return d.className; });
-  
-  function processData(data) {
-    var obj = data.countries_msg_vol;
-
-    var newDataSet = [];
-
-    for(var prop in obj) {
-      newDataSet.push({name: prop, className: prop.toLowerCase(), size: obj[prop]});
     }
-    return {children: newDataSet};
-  }
-  
-})();
+
+      });
+    
+          
+    });
+
+
+}
+  var numberIndex=0;
+
+function drawCircles(selected_countries){
+  console.log("hello");
+
+ 
+  var svg = d3.select("#viz");
+ 
+  var originX = 100;
+var originY = 200;
+
+
+
+
+  var index =0;
+GLOBAL.countries.forEach(function(d){
+ // console.log(d);
+  var votes= count[d];
+  //console.log(votes);
+  var circles = svg.append("circle");
+      circles.attr("cx",originX)
+           .attr("cy", originY)
+           .attr("r", votes*.008)
+           .on("click", function(){seeCountryView(d)});
+     
+  originX+=(150);
+  console.log("index"+index);
+  index+=1;
+});
+
+} 
+
+
+
+
+//add scale bar to see what the max response would be 
+function seeCountryView(number){
+
+  console.log(number);
+ 
+}
+
+
+var loadCSV = function(file, f){
+    d3.csv(file, function(error, data) {
+        if (error)
+        {
+          //If error is not null, something went wrong.
+           console.log(error);  //Log the error.
+        }
+        else
+        {
+           console.log(data);   //Log the data.
+           f(data);
+          GLOBAL.data+=data;
+    }});
+
+}
+
+
+
+// Read data from csv
+function getDataRows(f)
+{
+
+loadCSV("america.csv", f);
+loadCSV("apac.csv", f);
+loadCSV("africa.csv",f);
+loadCSV("europe.csv",f);
+console.log("global" + GLOBAL.data);
+
+}
+
+
+
