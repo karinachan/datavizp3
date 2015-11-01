@@ -8,21 +8,39 @@
         <script src="old_people.js"></script>
         <script src="gay.js"></script>
         <script type="text/javascript">
-        window.addEventListener("load",run);
+          window.addEventListener("load",run);
+          function run()
+          {
+              initialize_viz2()
+          }
 
-        function run()
-        {
-            run_viz2()
-        }
-        </script>
+          </script>
         <style type="text/css">
         </style>
     </head>
 
     <body>
+        <h1>Project 3</h1>
+        <h2>Karina Chan and Anisha Nakagawa</h2>
+
         <svg id="viz_1" height="500" width="800" style="border: 1px solid grey;">
         </svg>
 
+        <h2>Atitudes towards Older People</h2>
+        <!-- Question Selector -->
+        <select id="question_select2">
+          <option value="Q128">Q128 How much of a problem, if at all, is the growing number of older people in (survey country) – is it a major problem, a minor problem, or not a problem for (survey country)?</option>
+          <option value="Q129">Q129 Thinking about yourself, how confident are you that you will have an adequate standard of living in your old age – very confident, somewhat confident, not too confident, not confident at all?</option>
+          <option value="Q130">Q130 Who should bear the greatest responsibility for people’s economic wellbeing in their old age – their families, the government or themselves?</option>
+        </select>
+        </br>
+        <input type="checkbox" id="Britain" onchange="check_changed()">Britain<br>
+        <input type="checkbox" id="France" onchange="check_changed()">France<br>
+        <input type="checkbox" id="Germany" onchange="check_changed()">Germany<br>
+        <input type="checkbox" id="Italy" onchange="check_changed()">Italy<br>
+        <input type="checkbox" id="Russia" onchange="check_changed()">Russia<br>
+        <input type="checkbox" id="Spain" onchange="check_changed()">Spain<br>
+        <input type="checkbox" id="Turkey" onchange="check_changed()">Turkey<br>
         <svg id="viz_2" height="500" width="800" style="border: 1px solid grey;">
         </svg>
 
