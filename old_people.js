@@ -199,6 +199,7 @@ function create_viz(question, percentages)
   var margin_x = 100;
   // Wedge size variables
   var radius = (height - 2*margin_y) / 2;
+  var radius_in = radius/2;
   var theta_prev = 0;
 
   // Title
@@ -232,19 +233,25 @@ function create_viz(question, percentages)
       var center_y = height/2;
       var x_0 = radius * Math.sin(theta_prev) + center_x;
       var y_0 = -1*radius * Math.cos(theta_prev) + center_y;
+      var x_0_in = radius_in * Math.sin(theta_prev) + center_x;
+      var y_0_in = -1*radius_in * Math.cos(theta_prev) + center_y;
       var x_f = radius * Math.sin(theta_prev + theta_new) + center_x;
       var y_f = -1*radius * Math.cos(theta_prev + theta_new) + center_y;
+      var x_f_in = radius_in * Math.sin(theta_prev + theta_new) + center_x;
+      var y_f_in = -1*radius_in * Math.cos(theta_prev + theta_new) + center_y;
       if (theta_new < Math.PI)
       {
         var path_string = "M"+x_0+","+y_0+
                           " A" + radius + "," + radius + " 0 0,1 " + x_f + "," + y_f +
-                          " L"+center_x+","+center_y;
+                          " L"+x_f_in+","+y_f_in +
+                          " A" + radius_in + "," + radius_in + " 0 0,0 " + x_0_in + "," + y_0_in;
       }
       else // path needs different of params for theta > 180 degrees
       {
         var path_string = "M"+x_0+","+y_0+
                           " A" + radius + "," + radius + " 0 1,1 " + x_f + "," + y_f +
-                          " L"+center_x+","+center_y;
+                          " L"+x_f_in+","+y_f_in +
+                          " A" + radius_in + "," + radius_in + " 0 1,0 " + x_0_in + "," + y_0_in;
       }
       // This is to account for the offset of where to start subsequent wedges
       theta_prev += theta_new;
