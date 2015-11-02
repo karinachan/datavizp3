@@ -4,8 +4,9 @@
 var GLOBAL = { data: [],
                 colors: ["#3DCFFF", "#06C1FF", "#0099CC", "#006587", "#01394B", "#00171F", "#000000"],
                 america_countries: ["United States", "Brazil", "Argentina"],
-                europe_countries: ["Britain", "France", "Germany", "Italy", "Russia", "Spain", "Turkey"],
-                asia_countries: ["China", "Indonesia", "Japan", "Pakistan", "South Korea"],
+                // europe_countries: ["Britain", "France", "Germany", "Italy", "Russia", "Spain", "Turkey"],
+                // asia_countries: ["China", "Indonesia", "Japan", "Pakistan", "South Korea"],
+                country_options: ["China", "Pakistan", "South Korea", "Germany", "Russia", "Turkey"],
                 selected_countries: [],
                 question: "Q128",
               }
@@ -80,17 +81,9 @@ function check_changed()
   GLOBAL.selected_countries = [];
 
   // Fill the list up with all countries that are checked
-  for (country_index in GLOBAL.europe_countries)
+  for (country_index in GLOBAL.country_options)
   {
-    var country = GLOBAL.europe_countries[country_index]
-    if (document.getElementById(country).checked === true)
-    {
-      GLOBAL.selected_countries.push(country)
-    }
-  }
-  for (country_index in GLOBAL.asia_countries)
-  {
-    var country = GLOBAL.asia_countries[country_index]
+    var country = GLOBAL.country_options[country_index]
     if (document.getElementById(country).checked === true)
     {
       GLOBAL.selected_countries.push(country)
