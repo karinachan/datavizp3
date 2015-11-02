@@ -43,7 +43,7 @@ function changeQuestion(){
 
   console.log(document.getElementById("question_select1").value);
   curr_question=document.getElementById("question_select1").value;
-  document.getElementById("question_select1").innerHTML=prevQ;
+  document.getElementById("question_select1").innerHTML="Switch to "+prevQ;
   console.log("the next question"+nextQ);
   document.getElementById("question_select1").value=prevQ;
   console.log("changed?"+document.getElementById("question_select1").value);
@@ -116,7 +116,7 @@ svg.selectAll("*").remove();
     .attr("y", margin_y/2)
     .attr("dy","0.3em")
     .style("text-anchor","middle")
-    .text(question +" for "+GLOBAL1.countries.toString());
+    .text(question +" for "+GLOBAL1.countries.join(", "));
 
   // Caption
   var caption = svg.append("text")
@@ -137,7 +137,7 @@ var originY = 200;
     .attr("y", margin_y/2+50)
     .attr("dy","0.3em")
     .style("text-anchor","middle")
-    .text("Answers for "+yeskey);
+    .text("Total percentage of answers for "+yeskey);
 
 
 GLOBAL1.countries.forEach(function(d){
