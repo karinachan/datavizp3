@@ -2,17 +2,12 @@
 // Must use server: python -m SimpleHTTPServer 8080
 
 var GLOBAL = { data: [],
-                // colors: ["#00CCFF", "#0099CC", "#006699", "#003366", "#5C1437", "#7D0E37", "#2D082A"],
-                // colors: ["#16C2FB", "#03C0FF", "#0099CC", "#007095", "#005875", "#00445A", "#002B3A"],
                 colors: ["#3DCFFF", "#06C1FF", "#0099CC", "#006587", "#01394B", "#00171F", "#000000"],
                 america_countries: ["United States", "Brazil", "Argentina"],
                 europe_countries: ["Britain", "France", "Germany", "Italy", "Russia", "Spain", "Turkey"],
+                asia_countries: ["China", "Indonesia", "Japan", "Pakistan", "South Korea"],
                 selected_countries: [],
                 question: "Q128",
-                // questions: [
-                //   {number: "Q128", answers: ["Major problem", "Minor problem", "Not a problem", "Don't know", "Refused"]},
-                //   {number: "Q129", answers: ["Very confident", "Somewhat confident", "Not too confident", "Not confident at all", "Don’t know", "Refused"]}
-                // ]}
               }
 
 // Initialize the visualization
@@ -30,27 +25,38 @@ function initialize_viz2()
   });
 
   // Load the data
-  getData(function(data)
-  {
-    GLOBAL.data = data;
-  });
+  readCSV(function(data) {  });
 }
 
 // Read data from csv
-function getData(f)
+function readCSV(f)
 {
-  // from europe.csv file
-  d3.csv("europe.csv", function(error, data){
-    if (error)
+  // Get europe and asia data
+  d3.csv("europe.csv", function(error1, data1) {
+    d3.csv("apac.csv", function(error2, data2) {
+      if (error2)
+      {
+        //If error is not null, something went wrong.
+         console.log(error2);  //Log the error.
+      }
+      else
+      {
+        // add the new data to GLOBAL.data
+         GLOBAL.data.push.apply(GLOBAL.data, data2)
+      }
+    });
+    if (error1)
     {
-      console.log(error);  //Log the error.
+      //If error is not null, something went wrong.
+       console.log(error1);  //Log the error.
     }
     else
     {
-      //If no error, the file loaded correctly. Yay!
-      f(data);
-    }
+      // add the new data to GLOBAL.data
+       GLOBAL.data.push.apply(GLOBAL.data, data1)
+     }
   });
+
 }
 
 // Clear the existing visualization
@@ -77,6 +83,14 @@ function check_changed()
   for (country_index in GLOBAL.europe_countries)
   {
     var country = GLOBAL.europe_countries[country_index]
+    if (document.getElementById(country).checked === true)
+    {
+      GLOBAL.selected_countries.push(country)
+    }
+  }
+  for (country_index in GLOBAL.asia_countries)
+  {
+    var country = GLOBAL.asia_countries[country_index]
     if (document.getElementById(country).checked === true)
     {
       GLOBAL.selected_countries.push(country)
@@ -153,7 +167,7 @@ function count_answers(question, country)
   var total_counts = {}
   GLOBAL.data.forEach(function(r)
   {
-    // If the countryof the data row is the desired country
+    // If the country of the data row is the desired country
     if (r.COUNTRY == country)
     {
       var answer = r[question];
