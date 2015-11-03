@@ -43,8 +43,16 @@ document.getElementById("question_select1").innerHTML="Switch to "+prevQ;
 //console.log("the next question"+nextQ);
 document.getElementById("question_select1").value=prevQ;
 //console.log("changed?"+document.getElementById("question_select1").value);
+   document.getElementById(nextQ).style.display = 'block';
+    document.getElementById(prevQ).style.display = 'none';
 run_viz1();
+
+
 }
+
+
+
+
 function updateOverview(question){
 GLOBAL1.data.forEach(function(r) {  //for each row
 GLOBAL1.countries.forEach(function() { //for each country in data
@@ -84,8 +92,8 @@ count[country]["total"]=1;
 }
 var numberIndex=0;
 function drawCircles(question, answercheck){
-console.log("hello");
-console.log("asnwercheck"+ answercheck);
+//console.log("hello");
+//console.log("asnwercheck"+ answercheck);
 if (answercheck!==undefined) {yeskey= answercheck;}
 var svg = d3.select("#viz_1");
 svg.selectAll("*").remove();
@@ -159,7 +167,7 @@ originX+=(150);
 index+=1;}
 });
 }
-function create_viz(question, country, percentages)
+function create_viz1(question, country, percentages)
 {
 
 //console.log("pie chart here");
@@ -242,9 +250,7 @@ caption.text("Hover over wedges to see label and percentage information");
 });
 
 }
-//add scale bar to see what the max response would be
-//problem is if there is no "refused" answer, then spot in dictionary isn't created,
-//so have to check to make sure.
+
 function seeCountryView(country){
 
 if (activeQ===0){ var question = "Q27";}
@@ -267,26 +273,18 @@ for (i=0; i<GLOBAL1.questions[activeQ][question].length; i++){
     if (count[country][value]!==undefined){
     
     valvotes=  count[country][value]/total; //raw value, total later
-    console.log(valvotes);} else { //if it was undefined, just set valvotes as zero
+    //console.log(valvotes);
+    } else { //if it was undefined, just set valvotes as zero
     // this means this answer was not represented for this country
     valvotes=0;
-    //calculate the total here... to make sure you aren't missin anything >:(
+    
     }
-    /*if (isNaN(valvotes)){
-    valvotes=0; //NaN here is like 1 occurence in thousands, which makes it very small?
-    }*/
+  
     percentages[i]={"answer":value, "value":valvotes*100};
     }
     
-    //console.log("total"+count[country]["total"]+" for "+country);
-    //percentages
-    //console.log(percentages);
-    /*
-    for (i in percentages){
-    console.log("answer"+percentages[i]["answer"]);
-    console.log("value"+percentages[i]["value"]);
-    }*/
-    create_viz(question,country, percentages)
+  
+    create_viz1(question,country, percentages)
     
     }
     var loadCSV = function(file, f){
@@ -298,7 +296,7 @@ for (i=0; i<GLOBAL1.questions[activeQ][question].length; i++){
     }
     else
     {
-    console.log(data);   //Log the data.
+    //console.log(data);   //Log the data.
     f(data);
     GLOBAL1.data+=data;
     }});

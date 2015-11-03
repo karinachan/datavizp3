@@ -2,17 +2,14 @@
 // Must use server: python -m SimpleHTTPServer 8080
 
 var GLOBAL = { data: [],
-               
-                // colors: ["#16C2FB", "#03C0FF", "#0099CC", "#007095", "#005875", "#00445A", "#002B3A"],
+
                 colors: ["#3DCFFF", "#06C1FF", "#0099CC", "#006587", "#01394B", "#00171F", "#000000"],
                 america_countries: ["United States", "Brazil", "Argentina"],
-                europe_countries: ["Britain", "France", "Germany", "Italy", "Russia", "Spain", "Turkey"],
+                // europe_countries: ["Britain", "France", "Germany", "Italy", "Russia", "Spain", "Turkey"],
+                // asia_countries: ["China", "Indonesia", "Japan", "Pakistan", "South Korea"],
+                country_options: ["China", "Pakistan", "South Korea", "Germany", "Russia", "Turkey"],
                 selected_countries: [],
                 question: "Q128",
-                // questions: [
-                //   {number: "Q128", answers: ["Major problem", "Minor problem", "Not a problem", "Don't know", "Refused"]},
-                //   {number: "Q129", answers: ["Very confident", "Somewhat confident", "Not too confident", "Not confident at all", "Don’t know", "Refused"]}
-                // ]}
               }
 
 // Initialize the visualization
@@ -30,29 +27,40 @@ function initialize_viz2()
   });
 
   // Load the data
-  getData(function(data)
-  {
-    GLOBAL.data = data;
 
+  readCSV(function(data) {  });
 
-  });
 }
 
 // Read data from csv
-function getData(f)
+function readCSV(f)
 {
-  // from europe.csv file
-  d3.csv("europe.csv", function(error, data){
-    if (error)
+  // Get europe and asia data
+  d3.csv("europe.csv", function(error1, data1) {
+    d3.csv("apac.csv", function(error2, data2) {
+      if (error2)
+      {
+        //If error is not null, something went wrong.
+         console.log(error2);  //Log the error.
+      }
+      else
+      {
+        // add the new data to GLOBAL.data
+         GLOBAL.data.push.apply(GLOBAL.data, data2)
+      }
+    });
+    if (error1)
     {
-      console.log(error);  //Log the error.
+      //If error is not null, something went wrong.
+       console.log(error1);  //Log the error.
     }
     else
     {
-      //If no error, the file loaded correctly. Yay!
-      f(data);
-    }
+      // add the new data to GLOBAL.data
+       GLOBAL.data.push.apply(GLOBAL.data, data1)
+     }
   });
+
 }
 
 // Clear the existing visualization
@@ -76,9 +84,9 @@ function check_changed()
   GLOBAL.selected_countries = [];
 
   // Fill the list up with all countries that are checked
-  for (country_index in GLOBAL.europe_countries)
+  for (country_index in GLOBAL.country_options)
   {
-    var country = GLOBAL.europe_countries[country_index]
+    var country = GLOBAL.country_options[country_index]
     if (document.getElementById(country).checked === true)
     {
       GLOBAL.selected_countries.push(country)
@@ -155,7 +163,7 @@ function count_answers(question, country)
   var total_counts = {}
   GLOBAL.data.forEach(function(r)
   {
-    // If the countryof the data row is the desired country
+    // If the country of the data row is the desired country
     if (r.COUNTRY == country)
     {
       var answer = r[question];
@@ -187,6 +195,7 @@ function create_viz(question, percentages)
   var margin_x = 100;
   // Wedge size variables
   var radius = (height - 2*margin_y) / 2;
+  var radius_in = radius/2;
   var theta_prev = 0;
 
   // Title
@@ -220,19 +229,25 @@ function create_viz(question, percentages)
       var center_y = height/2;
       var x_0 = radius * Math.sin(theta_prev) + center_x;
       var y_0 = -1*radius * Math.cos(theta_prev) + center_y;
+      var x_0_in = radius_in * Math.sin(theta_prev) + center_x;
+      var y_0_in = -1*radius_in * Math.cos(theta_prev) + center_y;
       var x_f = radius * Math.sin(theta_prev + theta_new) + center_x;
       var y_f = -1*radius * Math.cos(theta_prev + theta_new) + center_y;
+      var x_f_in = radius_in * Math.sin(theta_prev + theta_new) + center_x;
+      var y_f_in = -1*radius_in * Math.cos(theta_prev + theta_new) + center_y;
       if (theta_new < Math.PI)
       {
         var path_string = "M"+x_0+","+y_0+
                           " A" + radius + "," + radius + " 0 0,1 " + x_f + "," + y_f +
-                          " L"+center_x+","+center_y;
+                          " L"+x_f_in+","+y_f_in +
+                          " A" + radius_in + "," + radius_in + " 0 0,0 " + x_0_in + "," + y_0_in;
       }
       else // path needs different of params for theta > 180 degrees
       {
         var path_string = "M"+x_0+","+y_0+
                           " A" + radius + "," + radius + " 0 1,1 " + x_f + "," + y_f +
-                          " L"+center_x+","+center_y;
+                          " L"+x_f_in+","+y_f_in +
+                          " A" + radius_in + "," + radius_in + " 0 1,0 " + x_0_in + "," + y_0_in;
       }
       // This is to account for the offset of where to start subsequent wedges
       theta_prev += theta_new;
